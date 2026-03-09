@@ -1,0 +1,138 @@
+import java.util.Scanner;
+
+public class MyCalculator {
+
+    public static void main(String[] args) {
+        char startOver = 'N';
+        String calculatorMode;
+        String operator;
+        String operation = "";
+        int numValues;
+        double currentValue;
+        double result = 0;
+
+        Scanner scnr = new Scanner(System.in);
+        
+        do {
+            System.out.println("Enter the calculator mode: Standard/Scientific?");
+            calculatorMode = scnr.next();
+            if(calculatorMode.equalsIgnoreCase("Standard")) {
+                System.out.println("The calculator will operate in standard mode.");
+                System.out.println("Enter '+' for addition, '-' for subtractions, '*' for multiplication, '/' for division");
+                operator = scnr.next();
+                while(!(operator.equals("+") || operator.equals("-") || operator.equals("*")|| operator.equals("/"))) {
+                    System.out.println("Invalid operator" + " " + operator);
+                    System.out.println("Enter '+' for addition, '-' for subtractions, '*' for multiplication, '/' for division");
+                    operator = scnr.next();
+                }
+                if (operator.equals("+") || operator.equals("-") || operator.equals("*")|| operator.equals("/")) {
+                    switch(operator) {
+                        case "+": operation = "add";
+                                  break;
+                        case "-": operation = "subtract";
+                                  break;
+                        case "*": operation = "multiply";
+                                  break;
+                        case "/": operation = "divide";
+                                  break;
+                    }
+                    System.out.println("How many numbers do you want to " + operation + "?");
+                    numValues = scnr.nextInt();
+                    System.out.println("Enter " + numValues + " numbers");
+                    for(int i = 0;i < numValues; i++) {
+                        currentValue = scnr.nextDouble();
+                        if(i == 0) {
+                            result = currentValue;
+                        }
+                        else {
+                            if(operator.equals("+")) {
+                                result += currentValue;
+                            }
+                            else if(operator.equals("-")) {
+                                result -= currentValue;
+                            }
+                            else if(operator.equals("*")) {
+                                result *= currentValue;
+                            }
+                            else if(operator.equals("/")) {
+                                result /= currentValue;
+                            }
+                        }
+                    }
+                    System.out.println("Result: " + result);
+                }
+            }
+            else if (calculatorMode.equalsIgnoreCase("Scientific")) {
+                System.out.println("The calculator will operate in scientific mode.");
+                
+                System.out.println("Enter '+' for addition, '-' for subtractions, '*' for multiplication, '/' for division, 'sin' for sin x, 'cos' for cos x, 'tan' for tan x:");
+                operator = scnr.next();
+                while(!(operator.equals("+") || operator.equals("-") || operator.equals("*") || operator.equals("/") || operator.equals("sin") || operator.equals("cos") || operator.equals("tan"))) {
+                    System.out.println("Invalid operator" + " " + operator);
+                    System.out.println("Enter '+' for addition, '-' for subtractions, '*' for multiplication, '/' for division, 'sin' for sin x, 'cos' for cos x, 'tan' for tan x:");
+                    operator = scnr.next();
+                }
+                
+                if(operator.equals("sin") || operator.equals("cos") || operator.equals("tan")) {
+                    System.out.println("Enter a number in radians to find the " + (operator.equals("sin") ? "sine" : (operator.equals("cos") ? "cosine" : "tangent")));
+                    currentValue = scnr.nextDouble();
+                    if(operator.equals("sin")) {
+                        result = Math.sin(currentValue);
+                    }
+                    else if(operator.equals("cos")) {
+                        result = Math.cos(currentValue);
+                    }
+                    else if(operator.equals("tan")) {
+                        result = Math.tan(currentValue);
+                    }
+                    System.out.println("Result: " + result);
+                }
+                else {
+                    
+                    switch(operator) {
+                        case "+": operation = "add";
+                                  break;
+                        case "-": operation = "subtract";
+                                  break;
+                        case "*": operation = "multiply";
+                                  break;
+                        case "/": operation = "divide";
+                                  break;
+                    }
+                    System.out.println("How many numbers do you want to " + operation + "?");
+                    numValues = scnr.nextInt();
+                    System.out.println("Enter " + numValues + " numbers");
+                    for(int i = 0;i < numValues; i++) {
+                        currentValue = scnr.nextDouble();
+                        if(i == 0) {
+                            result = currentValue;
+                        }
+                        else {
+                            if(operator.equals("+")) {
+                                result += currentValue;
+                            }
+                            else if(operator.equals("-")) {
+                                result -= currentValue;
+                            }
+                            else if(operator.equals("*")) {
+                                result *= currentValue;
+                            }
+                            else if(operator.equals("/")) {
+                                result /= currentValue;
+                            }
+                        }
+                    }
+                    System.out.println("Result: " + result);
+                }
+            }
+            
+            // Ask if user wants to start over
+            System.out.println("Do you want to start over? (Y/N)");
+            startOver = scnr.next().charAt(0);
+            result = 0; // Reset result for next calculation
+            
+        } while (Character.toUpperCase(startOver) == 'Y');
+        
+        System.out.println("Goodbye");
+    }
+}
