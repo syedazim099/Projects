@@ -1,0 +1,402 @@
+    // Gui code was commented out so that it could pass zybooks testcases.
+
+// import java.awt.Color;
+// import java.awt.Dimension;
+// import java.awt.GridBagConstraints;
+// import java.awt.GridBagLayout;
+// import java.awt.Insets;
+// import java.awt.event.ActionEvent;
+// import java.awt.event.ActionListener;
+//
+// import javax.swing.JButton;
+// import javax.swing.JFrame;
+// import javax.swing.JOptionPane;
+// import javax.swing.border.LineBorder;
+
+public class Grid { // extends JFrame implements ActionListener {
+
+    private boolean[][] bombGrid;
+    private int[][] countGrid;
+    private int numRows;
+    private int numColumns;
+    private int numBombs;
+    // private JButton[][] buttons;
+    private static int total;
+
+    public Grid() {
+        this.numRows = 10;
+        this.numColumns = 10;
+        this.numBombs = 25;
+        createBombGrid();
+        createCountGrid();
+        total = (this.numRows * this.numColumns) - this.numBombs;
+
+        
+
+        // GridBagConstraints positionConst = null;
+        // setTitle("Minesweeper");
+        //
+        // setLayout(new GridBagLayout());
+        // positionConst = new GridBagConstraints();
+        //
+        // buttons = new JButton[this.numRows][this.numColumns];
+        // for (int i = 0; i < this.numRows; i++) {
+        //     for (int j = 0; j < this.numColumns; j++) {
+        //         buttons[i][j] = new JButton();
+        //         buttons[i][j].setPreferredSize(new Dimension(30, 30));
+        //         buttons[i][j].setBackground(Color.LIGHT_GRAY);
+        //         buttons[i][j].setBorder(new LineBorder(Color.BLACK));
+        //         buttons[i][j].addActionListener(this);
+        //         positionConst.gridx = j;
+        //         positionConst.gridy = i;
+        //         positionConst.insets = new Insets(0, 0, 0, 0);
+        //         add(buttons[i][j], positionConst);
+        //     }
+        // }
+
+    }
+
+    public Grid(int rows, int columns) {
+        if (rows * columns >= 25) {
+            this.numRows = rows;
+            this.numColumns = columns;
+            this.numBombs = 25;
+            createBombGrid();
+            createCountGrid();
+        } else {
+            System.out.println("Cannot create grid with these values, number of bombs exceeds squares");
+        }
+        total = (this.numRows * this.numColumns) - this.numBombs;
+
+       
+
+        // GridBagConstraints positionConst = null;
+        // setTitle("Minesweeper");
+        //
+        // setLayout(new GridBagLayout());
+        // positionConst = new GridBagConstraints();
+        //
+        // buttons = new JButton[this.numRows][this.numColumns];
+        // for (int i = 0; i < this.numRows; i++) {
+        //     for (int j = 0; j < this.numColumns; j++) {
+        //         buttons[i][j] = new JButton();
+        //         buttons[i][j].setPreferredSize(new Dimension(25, 25));
+        //         buttons[i][j].setBackground(Color.LIGHT_GRAY);
+        //         buttons[i][j].setBorder(new LineBorder(Color.BLACK));
+        //         buttons[i][j].addActionListener(this);
+        //         positionConst.gridx = j;
+        //         positionConst.gridy = i;
+        //         positionConst.insets = new Insets(0, 0, 0, 0);
+        //         add(buttons[i][j], positionConst);
+        //
+        //     }
+        // }
+    }
+
+    public Grid(int rows, int columns, int numBombs) {
+        if (rows * columns >= numBombs) {
+            this.numRows = rows;
+            this.numColumns = columns;
+            this.numBombs = numBombs;
+
+            createBombGrid();
+            createCountGrid();
+        } else {
+            System.out.println("Cannot create grid with these values, number of bombs exceeds squares");
+        }
+        total = (this.numRows * this.numColumns) - this.numBombs;
+
+       
+
+        // GridBagConstraints positionConst = null;
+        // setTitle("Minesweeper");
+        //
+        // setLayout(new GridBagLayout());
+        // positionConst = new GridBagConstraints();
+        //
+        // buttons = new JButton[this.numRows][this.numColumns];
+        // for (int i = 0; i < this.numRows; i++) {
+        //     for (int j = 0; j < this.numColumns; j++) {
+        //         buttons[i][j] = new JButton();
+        //         buttons[i][j].setPreferredSize(new Dimension(25, 25));
+        //         buttons[i][j].setBackground(Color.LIGHT_GRAY);
+        //         buttons[i][j].setBorder(new LineBorder(Color.BLACK));
+        //         buttons[i][j].addActionListener(this);
+        //         positionConst.gridx = j;
+        //         positionConst.gridy = i;
+        //         positionConst.insets = new Insets(0, 0, 0, 0);
+        //         add(buttons[i][j], positionConst);
+        //
+        //     }
+        // }
+    }
+
+    private void createCountGrid() {
+        countGrid = new int[this.numRows][this.numColumns];
+        for (int i = 0; i < countGrid.length; i++) {
+            for (int j = 0; j < countGrid[i].length; j++) {
+                this.countGrid[i][j] = 0;
+                if (i == 0 && j == 0) { // top-left corner
+                    if (this.bombGrid[i][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                } else if (i == this.bombGrid.length - 1 && j == 0) { // bottom-left
+                    if (this.bombGrid[i][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                } else if (i == this.bombGrid.length - 1 && j == this.bombGrid[i].length - 1) { // bottom-right
+                    if (this.bombGrid[i][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                } else if (i == 0 && j == this.bombGrid[i].length - 1) { // top-right
+                    if (this.bombGrid[i][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                } else if (i == 0 && j > 0 && j < this.bombGrid[i].length - 1) { // top-side middle
+                    if (this.bombGrid[i][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                } else if (j == 0 && i > 0 && i < this.bombGrid.length - 1) { // left-side middle
+                    if (this.bombGrid[i - 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                } else if (i == this.bombGrid.length - 1 && j > 0 && j < this.bombGrid[i].length - 1) { // bottom-side middle
+                    if (this.bombGrid[i][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                } else if (j == this.bombGrid[i].length - 1 && i > 0 && i < this.bombGrid.length - 1) { // right-side middle
+                    if (this.bombGrid[i - 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                } else {
+                    if (this.bombGrid[i][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i - 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j - 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j + 1] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i + 1][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                    if (this.bombGrid[i][j] == true) {
+                        this.countGrid[i][j] += 1;
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void createBombGrid() {
+        int numBombsLeft = this.numBombs;
+        bombGrid = new boolean[this.numRows][this.numColumns];
+        for (int i = 0; i < bombGrid.length; i++) {
+            for (int j = 0; j < bombGrid[i].length; j++) {
+                bombGrid[i][j] = false;
+            }
+        }
+
+        while (numBombsLeft > 0) {
+            int randRow = (int) (Math.random() * numRows);
+            int randCol = (int) (Math.random() * numColumns);
+            if (bombGrid[randRow][randCol] == false) {
+                bombGrid[randRow][randCol] = true;
+                numBombsLeft -= 1;
+            } else {
+                continue;
+            }
+        }
+    }
+
+    public boolean[][] getBombGrid() {
+        boolean[][] newBombgrid = new boolean[this.bombGrid.length][this.bombGrid[0].length];
+        for (int i = 0; i < this.bombGrid.length; i++) {
+            for (int j = 0; j < this.bombGrid[i].length; j++) {
+                newBombgrid[i][j] = this.bombGrid[i][j];
+            }
+        }
+        return newBombgrid;
+    }
+
+    public int[][] getCountGrid() {
+        int[][] newCountgrid = new int[this.countGrid.length][this.countGrid[0].length];
+        for (int i = 0; i < this.countGrid.length; i++) {
+            for (int j = 0; j < this.countGrid[i].length; j++) {
+                newCountgrid[i][j] = this.countGrid[i][j];
+            }
+        }
+        return newCountgrid;
+    }
+
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public int getNumColumns() {
+        return numColumns;
+    }
+
+    public int getNumBombs() {
+        return numBombs;
+    }
+
+    public boolean isBombAtLocation(int row, int column) {
+        return this.bombGrid[row][column];
+    }
+
+    public int getCountAtLocation(int row, int column) {
+        return this.countGrid[row][column];
+    }
+
+    
+    //
+    // @Override
+    // public void actionPerformed(ActionEvent event) {
+    //     // all button click logic here originally
+    // }
+
+    public static void main(String[] args) {
+        Grid g1;
+
+        g1 = new Grid();
+
+    
+        // g1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // g1.pack();
+        // g1.setVisible(true);
+
+        // Print bomb grid
+        for (int i = 0; i < g1.getNumRows(); i++) {
+            for (int j = 0; j < g1.getNumColumns(); j++) {
+                if (g1.getBombGrid()[i][j]) {
+                    System.out.print("T" + " ");
+                } else {
+                    System.out.print("F" + " ");
+                }
+            }
+            System.out.println();
+        }
+
+        System.out.println();
+
+    
+        for (int i = 0; i < g1.getNumRows(); i++) {
+            for (int j = 0; j < g1.getNumColumns(); j++) {
+                System.out.print(g1.getCountGrid()[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+    }
+}
